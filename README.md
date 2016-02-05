@@ -4,7 +4,7 @@ This is our private repo for the big data assignment. The following sections are
 
 ### Setting up
 
-To get the code, navigate to your workspace directory and type in the command:
+To get the code, navigate to your workspace directory and type in the command line and do:
 ```
 git clone git@github.com:vincentfung13/UGBigDataAssignmentOne.git
 ```
