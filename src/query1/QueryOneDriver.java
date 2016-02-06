@@ -9,6 +9,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import utility.WikiModificationFileInputFormat;
+
 public class QueryOneDriver extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception {
@@ -17,11 +19,11 @@ public class QueryOneDriver extends Configured implements Tool {
 		job.setJarByClass(QueryOneDriver.class);
 		job.setMapperClass(QueryOneMapper.class);
 		job.setReducerClass(QueryOneReducer.class);
-		job.setInputFormatClass(MyInputFormat.class);
+		job.setInputFormatClass(WikiModificationFileInputFormat.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);	
 		
-		MyInputFormat.addInputPath(job, new Path(args[0]));
+		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
 		job.getConfiguration().set("earlierTimestamp", args[2]);

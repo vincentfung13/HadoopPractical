@@ -10,9 +10,14 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 
-public class QueryOneMapper extends Mapper<LongWritable, Text, Text, Text>
+/*
+ * Mapper class for query one
+ * With input as <positionInFile, revisionContent> and output as <articleId, revisionId>
+ */
+public class QueryOneMapper extends Mapper<LongWritable, Text, LongWritable, LongWritable>
 {
 	private Date earlierDate, laterDate;
+	private LongWritable articleId, revisionId;
 	
 	@Override 
 	public void setup(Context context) 
@@ -43,9 +48,9 @@ public class QueryOneMapper extends Mapper<LongWritable, Text, Text, Text>
 		}
 		                                 
 		if(revisionDate.after(earlierDate) && revisionDate.before(laterDate)) {
-				Text mapKey = new Text(firstLine[1]);	      
-				Text mapValue = new Text(firstLine[2]);       
-				context.write(mapKey, mapValue);
+				articleId = new LongWritable(Long.parseLong(firstLine[1]));
+				revisionId = new LongWritable(Long.parseLong(firstLine[2]));     
+				context.write(articleId, revisionId);
 		}
 	}
 }

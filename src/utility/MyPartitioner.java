@@ -1,4 +1,4 @@
-package query1;
+package utility;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;

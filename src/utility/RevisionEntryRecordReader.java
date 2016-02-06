@@ -1,4 +1,4 @@
-package query1;
+package utility;
 
 import java.io.IOException;
 
