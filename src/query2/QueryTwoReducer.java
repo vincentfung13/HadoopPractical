@@ -53,9 +53,7 @@ public class QueryTwoReducer extends Reducer<LongWritable, LongWritable, LongWri
 				articleModificationCount.add(entry);
 			}
 			else if (count > oldLeastValue) {
-				while (articleModificationCount.peek().getValue() == oldLeastValue) {
-					articleModificationCount.poll();
-				}
+				articleModificationCount.poll();
 				Map.Entry<Long, Long> entry = new AbstractMap.SimpleEntry<Long, Long>(key.get(), count);
 				articleModificationCount.add(entry);
 			}
