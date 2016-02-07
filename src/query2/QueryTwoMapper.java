@@ -72,8 +72,9 @@ public class QueryTwoMapper extends Mapper<LongWritable, Text, LongWritable, Lon
 	public void cleanup(Context context) throws IOException, InterruptedException{
 		Iterator<Entry<Long, Long>> itr = articleModificationCounts.entrySet().iterator();
 		while (itr.hasNext()){
-			articleIdWritable = new LongWritable(itr.next().getKey());
-			modificationCounts = new LongWritable(itr.next().getValue());
+			Entry<Long, Long> entry = itr.next();
+			articleIdWritable = new LongWritable(entry.getKey());
+			modificationCounts = new LongWritable(entry.getValue());
 			context.write(articleIdWritable, modificationCounts);
 		}
 		
