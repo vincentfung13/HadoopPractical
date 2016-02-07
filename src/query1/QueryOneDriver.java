@@ -3,6 +3,7 @@ package query1;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -20,7 +21,10 @@ public class QueryOneDriver extends Configured implements Tool {
 		job.setMapperClass(QueryOneMapper.class);
 		job.setReducerClass(QueryOneReducer.class);
 		job.setInputFormatClass(WikiModificationFileInputFormat.class);
-		job.setOutputKeyClass(Text.class);
+		
+		job.setMapOutputKeyClass(LongWritable.class);
+		job.setMapOutputValueClass(LongWritable.class);
+		job.setOutputKeyClass(LongWritable.class);
 		job.setOutputValueClass(Text.class);	
 		
 		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));
