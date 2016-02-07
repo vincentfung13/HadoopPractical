@@ -34,8 +34,8 @@ public class QueryOneDriver extends Configured implements Tool {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		conf.addResource(new Path("/users/level4/2104275f/BD4/bd4-hadoop/conf/core-site.xml"));
-		conf.set("mapreduce.job.jar", "file:///users/level4/2104275f/BD4/QueryOneDriver.jar");
+		conf.addResource(new Path("/users/msc/2218802v/BD4/bd4-hadoop/conf/core-site.xml"));
+		conf.set("mapreduce.job.jar", "file:///users/msc/2218802v/BD4/QueryOneDriver.jar");
 		System.exit(ToolRunner.run(conf, new QueryOneDriver(), args));
 	}
 }
