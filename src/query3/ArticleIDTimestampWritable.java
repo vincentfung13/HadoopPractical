@@ -48,7 +48,7 @@ public class ArticleIDTimestampWritable implements Writable, WritableComparable<
 	}
 
 	public String toString() {
-		return (new StringBuilder().append(articleId)).append(" ").append(timeStamp).toString();
+		return articleId.toString();
 	}
 
 	@Override

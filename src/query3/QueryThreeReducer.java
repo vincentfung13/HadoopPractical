@@ -12,6 +12,7 @@ public class QueryThreeReducer extends Reducer<ArticleIDTimestampWritable, LongW
 	public void reduce(ArticleIDTimestampWritable key, Iterable<LongWritable> values, Context context) 
 			throws IOException, InterruptedException {
 		
+		
 		for (LongWritable value: values) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(value.get() + " ");
