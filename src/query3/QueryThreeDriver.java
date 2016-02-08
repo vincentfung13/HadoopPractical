@@ -28,6 +28,7 @@ public class QueryThreeDriver extends Configured implements Tool {
 		job.setOutputKeyClass(ArticleIDTimestampWritable.class);
 		job.setOutputValueClass(Text.class);
 		
+		job.setSortComparatorClass(ArticleIDComparator.class);
 		job.setGroupingComparatorClass(TimestampComparator.class);
 		job.setPartitionerClass(ArticleIDPartitioner.class);
 		
