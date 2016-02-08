@@ -25,7 +25,7 @@ public class QueryOneDriver extends Configured implements Tool {
 		job.setMapOutputKeyClass(LongWritable.class);
 		job.setMapOutputValueClass(LongWritable.class);
 		job.setOutputKeyClass(LongWritable.class);
-		job.setOutputValueClass(Text.class);	
+		job.setOutputValueClass(Text.class);
 		
 		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
