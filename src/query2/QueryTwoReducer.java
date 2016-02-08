@@ -23,7 +23,6 @@ public class QueryTwoReducer extends Reducer<LongWritable, LongWritable, LongWri
 	@Override
 	public void setup(Context context) {
 		Configuration conf = context.getConfiguration();
-		//parameters
 		k = conf.getInt("k", 10);
 		modificationCountToArticle = new TreeMap<Long, PriorityQueue<Long>>();
 	}
@@ -68,7 +67,6 @@ public class QueryTwoReducer extends Reducer<LongWritable, LongWritable, LongWri
 		Iterator<Long> itr = modificationCountToArticle.descendingKeySet().iterator();
 		while (itr.hasNext()) {
 			long key = itr.next();
-			System.out.println("Key:" + key);
 			PriorityQueue<Long> articleIdQueue = modificationCountToArticle.get(key);
 			while (articleIdQueue.size() > 0) {
 				context.write(new LongWritable(articleIdQueue.poll()), new LongWritable(key));
