@@ -1,20 +1,20 @@
-package utility;
+package query3;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.Date;
 
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableUtils;
-import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 
-public class ArticleIDTimestampWritable implements Writable,
-	WritableComparable<ArticleIDTimestampWritable> {
-
+public class ArticleIDTimestampWritable implements Writable, WritableComparable<ArticleIDTimestampWritable> {
+	
 	private Long articleId;
 	private String timeStamp;
+	
+	public ArticleIDTimestampWritable() {
+	}
 
 	public ArticleIDTimestampWritable(long articleId, String timeStamp) {
 		this.articleId = articleId;
@@ -29,13 +29,6 @@ public class ArticleIDTimestampWritable implements Writable,
 	public void write(DataOutput dataOutput) throws IOException {
 		WritableUtils.writeVLong(dataOutput, articleId);
 		WritableUtils.writeString(dataOutput, timeStamp);
-	}
-	
-	@Override
-	public int compareTo(ArticleIDTimestampWritable obj) {
-		Date thisDate = ISO8601Utils.parse(timeStamp); 
-		Date objDate = ISO8601Utils.parse(obj.timeStamp);
-		return thisDate.compareTo(objDate);
 	}
 
 	public Long getArticleId() {
@@ -56,5 +49,10 @@ public class ArticleIDTimestampWritable implements Writable,
 
 	public String toString() {
 		return (new StringBuilder().append(articleId)).append(" ").append(timeStamp).toString();
+	}
+
+	@Override
+	public int compareTo(ArticleIDTimestampWritable cmpObj) {
+		return articleId.compareTo(cmpObj.getArticleId());
 	}
 }

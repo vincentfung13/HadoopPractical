@@ -4,12 +4,12 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import utility.ArticleIDTimestampWritable;
 import utility.WikiModificationFileInputFormat;
 
 public class QueryThreeDriver extends Configured implements Tool {
@@ -23,10 +23,13 @@ public class QueryThreeDriver extends Configured implements Tool {
 		job.setReducerClass(QueryThreeReducer.class);
 		
 		job.setInputFormatClass(WikiModificationFileInputFormat.class);
-		job.setMapOutputKeyClass(LongWritable.class);
-		job.setMapOutputValueClass(ArticleIDTimestampWritable.class);
-		job.setOutputKeyClass(LongWritable.class);
-		job.setOutputValueClass(ArticleIDTimestampWritable.class);
+		job.setMapOutputKeyClass(ArticleIDTimestampWritable.class);
+		job.setMapOutputValueClass(LongWritable.class);
+		job.setOutputKeyClass(ArticleIDTimestampWritable.class);
+		job.setOutputValueClass(Text.class);
+		
+		job.setGroupingComparatorClass(TimestampComparator.class);
+		job.setPartitionerClass(ArticleIDPartitioner.class);
 		
 		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));

@@ -3,21 +3,22 @@ package query3;
 import java.io.IOException;
 
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-import utility.ArticleIDTimestampWritable;
-
-public class QueryThreeReducer extends Reducer<LongWritable, ArticleIDTimestampWritable, LongWritable, ArticleIDTimestampWritable> {
-	@Override
-	public void setup(Context context) {
-	}
+public class QueryThreeReducer extends Reducer<ArticleIDTimestampWritable, LongWritable, ArticleIDTimestampWritable, Text> {
 	
 	@Override
-	public void reduce(LongWritable key, Iterable<ArticleIDTimestampWritable> values, Context context) 
+	public void reduce(ArticleIDTimestampWritable key, Iterable<LongWritable> values, Context context) 
 			throws IOException, InterruptedException {
+		
+		for (LongWritable value: values) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(value.get() + " ");
+			sb.append(key.getTimeStamp());
+			
+			context.write(key, new Text(sb.toString()));
+		}
 	}
-	
-	@Override
-	public void cleanup(Context context) throws IOException, InterruptedException{
-	}
+
 }
