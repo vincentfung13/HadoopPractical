@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import utility.Properties;
 import utility.WikiModificationFileInputFormat;
 
 public class QueryOneDriver extends Configured implements Tool {
@@ -40,8 +41,8 @@ public class QueryOneDriver extends Configured implements Tool {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		conf.addResource(new Path("/users/level4/2104275f/BD4/bd4-hadoop/conf/core-site.xml"));
-		conf.set("mapreduce.job.jar", "file:///users/level4/2104275f/BD4/QueryOneDriver.jar");
+		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
+		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
 		System.exit(ToolRunner.run(conf, new QueryOneDriver(), args));
 	}
 }

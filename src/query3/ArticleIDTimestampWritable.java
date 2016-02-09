@@ -12,6 +12,7 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 
 public class ArticleIDTimestampWritable implements Writable, WritableComparable<ArticleIDTimestampWritable> {
 	
+	// This is the natural key
 	private Long articleId;
 	private String timeStamp;
 	

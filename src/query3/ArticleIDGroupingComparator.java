@@ -3,9 +3,9 @@ package query3;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 
-public class ArticleIDComparator extends WritableComparator{
+public class ArticleIDGroupingComparator extends WritableComparator{
 	
-	public ArticleIDComparator() {
+	public ArticleIDGroupingComparator() {
 		super(ArticleIDTimestampWritable.class, true);
 	}
 
@@ -15,8 +15,6 @@ public class ArticleIDComparator extends WritableComparator{
 		ArticleIDTimestampWritable firstComposite = (ArticleIDTimestampWritable) w1;
 		ArticleIDTimestampWritable secondComposite = (ArticleIDTimestampWritable) w2;
 		
-		int result = firstComposite.compareTo(secondComposite);
-		
-		return result;
+		return firstComposite.getArticleId().compareTo(secondComposite.getArticleId());
 	}
 }
