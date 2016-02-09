@@ -39,12 +39,12 @@ public class QueryOneDriver extends Configured implements Tool {
 		
 		// Taking key samples from the input file
 //		double pcnt = 10.0;
-//        int numSamples = Properties.NUM_REDUCER_TASK;
-//        int maxSplits = Properties.NUM_REDUCER_TASK - 1;
-//        if (0 >= maxSplits)
-//            maxSplits = Integer.MAX_VALUE;
-//        InputSampler.Sampler<LongWritable, LongWritable> sampler = 
-//        		new InputSampler.RandomSampler<LongWritable, LongWritable>(pcnt, numSamples, maxSplits);
+//		int numSamples = Properties.NUM_REDUCER_TASK;
+//		int maxSplits = Properties.NUM_REDUCER_TASK - 1;
+//		if (0 >= maxSplits)
+//			maxSplits = Integer.MAX_VALUE;
+//		InputSampler.Sampler<LongWritable, LongWritable> sampler = 
+//				new InputSampler.RandomSampler<LongWritable, LongWritable>(pcnt, numSamples, maxSplits);
 //        InputSampler.writePartitionFile(job, sampler);
 
 		job.getConfiguration().set("earlierTimestamp", args[2]);

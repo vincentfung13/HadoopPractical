@@ -22,6 +22,7 @@ public class QueryThreeDriver extends Configured implements Tool {
 		
 		job.setMapperClass(QueryThreeMapper.class);
 		job.setReducerClass(QueryThreeReducer.class);
+		job.setNumReduceTasks(1);
 		
 		job.setInputFormatClass(WikiModificationFileInputFormat.class);
 		job.setMapOutputKeyClass(ArticleIDTimestampWritable.class);

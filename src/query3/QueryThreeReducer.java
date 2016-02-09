@@ -11,13 +11,16 @@ public class QueryThreeReducer extends Reducer<ArticleIDTimestampWritable, LongW
 	@Override
 	public void reduce(ArticleIDTimestampWritable key, Iterable<LongWritable> values, Context context) 
 			throws IOException, InterruptedException {
-		
+		// Output only the first record (the one with the latest timestamp)
+		int i = 0;
 		for (LongWritable value: values) {
+			if (i == 1)
+				break;
 			StringBuilder sb = new StringBuilder();
 			sb.append(value.get() + " ");
 			sb.append(key.getTimeStamp());
-			System.out.println(value);
 			context.write(key, new Text(sb.toString()));
+			i++;
 		}
 	}
 
