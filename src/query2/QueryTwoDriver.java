@@ -4,8 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
@@ -47,8 +45,6 @@ public class QueryTwoDriver extends Configured implements Tool {
 		Configuration conf = new Configuration();
 		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
 		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
-		conf.setBoolean("mapred.output.compress",true);
-		conf.setClass("mapred.output.compression.codec",GzipCodec.class,CompressionCodec.class);
 		System.exit(ToolRunner.run(conf, new QueryTwoDriver(), args));
 	}
 }
