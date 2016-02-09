@@ -5,6 +5,8 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.compress.CompressionCodec;
+import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.partition.InputSampler;
@@ -37,7 +39,7 @@ public class QueryThreeDriver extends Configured implements Tool {
 		job.setSortComparatorClass(CompositeKeyComparator.class);
 		job.setGroupingComparatorClass(ArticleIDGroupingComparator.class);
 		
-		// Set inputpath and output path
+		// Set input path and output path
 		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
@@ -63,6 +65,8 @@ public class QueryThreeDriver extends Configured implements Tool {
 		Configuration conf = new Configuration();
 		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
 		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
+		conf.setBoolean("mapred.output.compress",true);
+		conf.setClass("mapred.output.compression.codec",GzipCodec.class,CompressionCodec.class);
 		System.exit(ToolRunner.run(conf, new QueryThreeDriver(), args));
 	}
 }
