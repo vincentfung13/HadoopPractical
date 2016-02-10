@@ -23,6 +23,7 @@ public class QueryThreeMultiReducer extends Reducer<LongWritable, Text, LongWrit
 		String currentLatestRevisionID = "";
 		
 		for (Text value: values) {
+			System.out.println(key.toString() + " " + value.toString());
 			String[] revisionIDTimestamp = value.toString().split(" ");
 			Date revisionDate = ISO8601Utils.parse(revisionIDTimestamp[1]);
 			String revisionID = revisionIDTimestamp[0];

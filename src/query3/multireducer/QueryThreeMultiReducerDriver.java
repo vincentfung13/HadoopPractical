@@ -33,7 +33,7 @@ public class QueryThreeMultiReducerDriver extends Configured implements Tool {
 		job.setJarByClass(QueryThreeMultiReducerDriver.class);
 		
 		job.setMapperClass(QueryThreeMutiReducerMapper.class);
-		job.setCombinerClass(QueryThreeMultiReducerCombiner.class);
+		job.setCombinerClass(QueryThreeMultiReducer.class);
 		job.setReducerClass(QueryThreeMultiReducer.class);
 		job.setNumReduceTasks(Properties.NUM_REDUCER_TASK);
 		
