@@ -1,4 +1,4 @@
-package query3;
+package query3.singlereducer;
 
 import java.io.DataInput;
 import java.io.DataOutput;

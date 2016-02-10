@@ -9,9 +9,11 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-/*
+/**
  * Reducer class for query one
  * With input as <articleId, revisionId[]> and output as <articleId, outputString>
+ * 
+ * @author vincentfung13
  */
 public class QueryOneReducer extends Reducer<LongWritable, LongWritable, LongWritable, Text> {
 	

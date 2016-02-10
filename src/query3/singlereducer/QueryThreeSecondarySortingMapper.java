@@ -1,4 +1,4 @@
-package query3;
+package query3.singlereducer;
 
 import java.io.IOException;
 import java.util.Date;
@@ -14,7 +14,7 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
  * Mapper class for query one
  * With input as <positionInFile, revisionContent> and output as <composite(articleId, timestamp), revisionId>
  */
-public class QueryThreeMapper extends Mapper<LongWritable, Text, ArticleIDTimestampWritable, LongWritable> {
+public class QueryThreeSecondarySortingMapper extends Mapper<LongWritable, Text, ArticleIDTimestampWritable, LongWritable> {
 	
 	Date timeThreshold;
 	

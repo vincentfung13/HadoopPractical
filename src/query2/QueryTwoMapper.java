@@ -17,8 +17,9 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 /**
  * Mapper class for query two.
  * It is similar to the one for query one, except it outputs <articleId, numberOfModifications> for each revision record.
+ * Note that each mapper aggregates its pairs based on keys first before sending them to the combiner. 
+ * 
  * @author vincentfung13
- *
  */
 
 public class QueryTwoMapper extends Mapper<LongWritable, Text, LongWritable, LongWritable> {

@@ -10,9 +10,11 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 
-/*
+/**
  * Mapper class for query one
  * With input as <positionInFile, revisionContent> and output as <articleId, revisionId>
+ * 
+ * @author vincentfung13
  */
 public class QueryOneMapper extends Mapper<LongWritable, Text, LongWritable, LongWritable>
 {

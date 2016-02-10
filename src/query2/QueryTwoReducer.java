@@ -10,9 +10,11 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
- * Single reducer that selects the top K record and writes them to the output
+ * Single reducer that selects the top K record and writes them to the output.
+ * It makes use of a treemap which stores <key, value> pair where key is modification count and value is a priority queue of article IDs.
+ * This data structure conveniently handles the sorting and key-value retrieval. It also handles the case where many article may share the same modification count.
+ * 
  * @author vincentfung13
- *
  */
 
 public class QueryTwoReducer extends Reducer<LongWritable, LongWritable, LongWritable, LongWritable> {

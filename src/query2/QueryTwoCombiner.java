@@ -10,7 +10,6 @@ import org.apache.hadoop.mapreduce.Reducer;
  * It aggregates the output from the mappers before sending the results to the reducer
  * 
  * @author vincentfung13
- *
  */
 public class QueryTwoCombiner extends Reducer<LongWritable, LongWritable, LongWritable, LongWritable> {
 	

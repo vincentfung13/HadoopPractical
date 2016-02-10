@@ -12,6 +12,11 @@ import org.apache.hadoop.util.ToolRunner;
 import utility.Properties;
 import utility.WikiModificationFileInputFormat;
 
+/**
+ * Driver class for query two.
+ * 
+ * @author 2104275f
+ */
 public class QueryTwoDriver extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception {

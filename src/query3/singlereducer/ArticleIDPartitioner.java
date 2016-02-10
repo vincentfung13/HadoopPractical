@@ -1,4 +1,4 @@
-package query3;
+package query3.singlereducer;
 
 
 import org.apache.hadoop.io.LongWritable;
