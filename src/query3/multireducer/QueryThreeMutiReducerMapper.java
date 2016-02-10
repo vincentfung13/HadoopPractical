@@ -49,7 +49,7 @@ public class QueryThreeMutiReducerMapper extends Mapper<LongWritable, Text, Long
 		}
 		
 		if (revisionDate.before(timeThreshold)) {
-			context.write(new LongWritable(articleId), new Text(revisionId + '\t' + timestamp));
+			context.write(new LongWritable(articleId), new Text(revisionId + " " + timestamp));
 		}
 	}
 }
