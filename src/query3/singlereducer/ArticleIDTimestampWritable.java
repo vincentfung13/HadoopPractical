@@ -10,6 +10,11 @@ import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 
+/**
+ * Composite key for secondary sorting
+ * 
+ * @author vincentfung13
+ */
 public class ArticleIDTimestampWritable implements Writable, WritableComparable<ArticleIDTimestampWritable> {
 	
 	// This is the natural key

@@ -13,6 +13,11 @@ import org.apache.hadoop.util.ToolRunner;
 import utility.Properties;
 import utility.WikiModificationFileInputFormat;
 
+/**
+ * Driver class of the single reducer solution of query 3
+ * 
+ * @author vincentfung13
+ */
 public class QueryThreeSingleReducerDriver extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception {

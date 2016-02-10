@@ -6,6 +6,11 @@ import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 
+/**
+ * Comparator used in the sorting phase.
+ * 
+ * @author vincentfung13
+ */
 public class CompositeKeyComparator extends WritableComparator{
 	
 	public CompositeKeyComparator() {

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
@@ -42,19 +41,9 @@ public class QueryTwoMapper extends Mapper<LongWritable, Text, LongWritable, Lon
 		String line = value.toString();
 		String[] lineSplit = line.split("\n");
 		String[] firstLine = lineSplit[0].split(" ");
-		StringTokenizer st = new StringTokenizer(lineSplit[0]);
 		
-		Date revisionDate = null;
-		while (st.hasMoreTokens()){
-			String str = st.nextToken();
-			try {
-				revisionDate = ISO8601Utils.parse(str);
-				break;
-			}
-			catch(IllegalArgumentException e){
-				continue;
-			}
-		}
+		String timestamp = firstLine[4];
+		Date revisionDate = ISO8601Utils.parse(timestamp);
 		        
 		// Trade off between memory usage and efficiency
 		if (revisionDate.after(earlierDate) && revisionDate.before(laterDate)) {

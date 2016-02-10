@@ -9,6 +9,12 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 
+/**
+ * Reducer class for the multi-reducer version of query three.
+ * 
+ * @author vincentfung13
+ */
+
 public class QueryThreeMultiReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
 	
 	@Override
