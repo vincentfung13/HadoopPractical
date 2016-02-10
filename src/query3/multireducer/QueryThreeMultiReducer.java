@@ -6,37 +6,39 @@ import java.util.Date;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Reducer.Context;
-import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
+
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
+
+/**
+ * Reducer class for the multi-reducer version of query three.
+ * 
+ * @author vincentfung13
+ */
 
 public class QueryThreeMultiReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
-	private LongWritable currentLatestArticleID;
-	private String currentLatestRevisionID;
-	private Date currentLatestDate;
-	
 	@Override
-	public void setup(Context context) {
-		currentLatestArticleID = new LongWritable();
-		currentLatestRevisionID = "";
-		currentLatestDate = new Date();
-	}
-	
-	@Override
-	public void reduce(LongWritable key, Iterable<Text> values, Context context) 
+	public void reduce (LongWritable key, Iterable<Text> values, Context context) 
 			throws IOException, InterruptedException {
+		Date currentLatestRevisionDate = null;
+		String currentLatestRevisionID = "";
+		
 		for (Text value: values) {
-			String[] revisionIDTimestamp = value.toString().split("\t");
+			String[] revisionIDTimestamp = value.toString().split(" ");
 			Date revisionDate = ISO8601Utils.parse(revisionIDTimestamp[1]);
-			if (revisionDate.after(currentLatestDate)) {
-				currentLatestDate = revisionDate;
-				currentLatestArticleID = key;
-				currentLatestRevisionID = revisionIDTimestamp[0];
+			String revisionID = revisionIDTimestamp[0];
+			
+			if (currentLatestRevisionDate == null || revisionDate.after(currentLatestRevisionDate)) {
+				currentLatestRevisionDate = revisionDate;
+				currentLatestRevisionID = revisionID;
 			}
 		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(currentLatestRevisionID);
+		sb.append(" ");
+		sb.append(ISO8601Utils.format(currentLatestRevisionDate));
+		
+		context.write(key, new Text(sb.toString()));
 	}
-	
-	@Override
-	public void cleanup(Context context) throws IOException, InterruptedException {
-		context.write(currentLatestArticleID, new Text(currentLatestRevisionID + "\t" + ISO8601Utils.format(currentLatestDate)));
-	}
+
 }

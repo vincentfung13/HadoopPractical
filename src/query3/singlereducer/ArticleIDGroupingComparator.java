@@ -3,6 +3,11 @@ package query3.singlereducer;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 
+/**
+ * Comparator to handle grouping of articleID
+ * 
+ * @author vincentfung13
+ */
 public class ArticleIDGroupingComparator extends WritableComparator{
 	
 	public ArticleIDGroupingComparator() {

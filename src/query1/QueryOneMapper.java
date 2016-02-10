@@ -2,7 +2,6 @@ package query1;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
@@ -35,19 +34,8 @@ public class QueryOneMapper extends Mapper<LongWritable, Text, LongWritable, Lon
 		String line = value.toString();
 		String[] lineSplit = line.split("\n");
 		String[] firstLine = lineSplit[0].split(" ");
-		StringTokenizer st = new StringTokenizer(lineSplit[0]);
-		
-		Date revisionDate = null;
-		while (st.hasMoreTokens()){
-			String str = st.nextToken();
-			try {
-				revisionDate = ISO8601Utils.parse(str);
-				break;
-			}
-			catch(IllegalArgumentException e){
-				continue;
-			}
-		}
+		String timestamp = firstLine[4];
+		Date revisionDate = ISO8601Utils.parse(timestamp);
 		                                 
 		if(revisionDate.after(earlierDate) && revisionDate.before(laterDate)) {
 				articleId = new LongWritable(Long.parseLong(firstLine[1]));

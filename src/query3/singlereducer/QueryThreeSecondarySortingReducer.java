@@ -6,6 +6,12 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
+/**
+ * Reducer class for the single-reducer solution of query 3
+ * Note that it only outputs the first value because all the values all already sorted when they reach the reducers
+ * @author vincentfung13
+ *
+ */
 public class QueryThreeSecondarySortingReducer extends Reducer<ArticleIDTimestampWritable, LongWritable, ArticleIDTimestampWritable, Text> {
 	
 	@Override

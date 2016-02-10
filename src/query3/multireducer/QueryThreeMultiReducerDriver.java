@@ -12,7 +12,6 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.partition.InputSampler;
 import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -35,7 +34,7 @@ public class QueryThreeMultiReducerDriver extends Configured implements Tool {
 		
 		job.setMapperClass(QueryThreeMutiReducerMapper.class);
 		job.setCombinerClass(QueryThreeMultiReducerCombiner.class);
-		job.setReducerClass(QueryThreeMultiReducerCombiner.class);
+		job.setReducerClass(QueryThreeMultiReducer.class);
 		job.setNumReduceTasks(Properties.NUM_REDUCER_TASK);
 		
 		job.setInputFormatClass(WikiModificationFileInputFormat.class);
@@ -54,14 +53,14 @@ public class QueryThreeMultiReducerDriver extends Configured implements Tool {
 		TotalOrderPartitioner.setPartitionFile(job.getConfiguration(), partitionFile);
 		
 		// Taking key samples from the input file
-		double pcnt = 10.0;
-		int numSamples = Properties.NUM_REDUCER_TASK;
-		int maxSplits = Properties.NUM_REDUCER_TASK - 1;
-		if (0 >= maxSplits)
-			maxSplits = Integer.MAX_VALUE;
-		InputSampler.Sampler<LongWritable, LongWritable> sampler = 
-				new InputSampler.RandomSampler<LongWritable, LongWritable>(pcnt, numSamples, maxSplits);
-        InputSampler.writePartitionFile(job, sampler);
+//		double pcnt = 10.0;
+//		int numSamples = Properties.NUM_REDUCER_TASK;
+//		int maxSplits = Properties.NUM_REDUCER_TASK - 1;
+//		if (0 >= maxSplits)
+//			maxSplits = Integer.MAX_VALUE;
+//		InputSampler.Sampler<LongWritable, LongWritable> sampler = 
+//				new InputSampler.RandomSampler<LongWritable, LongWritable>(pcnt, numSamples, maxSplits);
+//        InputSampler.writePartitionFile(job, sampler);
 		
 		job.getConfiguration().set("timestamp", args[2]);
 		job.submit();
