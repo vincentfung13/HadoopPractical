@@ -1,7 +1,12 @@
 package query2;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Job;
@@ -50,6 +55,25 @@ public class QueryTwoDriver extends Configured implements Tool {
 		Configuration conf = new Configuration();
 		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
 		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
-		System.exit(ToolRunner.run(conf, new QueryTwoDriver(), args));
+		ToolRunner.run(conf, new QueryTwoDriver(), args);
+		
+		System.out.println("INFO: Mapreduce job finsihed, printing out the results:");
+		try {
+			FileSystem fs = FileSystem.get(conf);
+			Path jobOutputPath = new Path(args[1]);
+		
+			FileStatus[] status = fs.listStatus(jobOutputPath);
+			for (int i = 0; i < status.length; i++) {
+				BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(status[i].getPath())));
+				String line;
+                line = br.readLine();
+                while (line != null){
+                	System.out.println(line);
+                    line = br.readLine();
+                }
+			}
+		} catch (Exception e) {
+			System.err.println("ERROR: File not found.");
+		}	
 	}
 }
