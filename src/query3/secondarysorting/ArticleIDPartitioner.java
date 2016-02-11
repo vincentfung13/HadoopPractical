@@ -1,6 +1,6 @@
-package query3.singlereducer;
+package query3.secondarysorting;
 
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Partitioner;
 
 /**
@@ -8,10 +8,10 @@ import org.apache.hadoop.mapreduce.Partitioner;
  * 
  * @author vincentfung13
  */
-public class ArticleIDPartitioner extends Partitioner<ArticleIDTimestampWritable, LongWritable> {
+public class ArticleIDPartitioner extends Partitioner<ArticleIDTimestampWritable, IntWritable> {
 
 	@Override
-	public int getPartition(ArticleIDTimestampWritable key, LongWritable value, int numPartitions) {
+	public int getPartition(ArticleIDTimestampWritable key, IntWritable value, int numPartitions) {
 		int hash = key.getArticleId().hashCode();
         return hash % numPartitions;
 	}

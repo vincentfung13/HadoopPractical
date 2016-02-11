@@ -49,7 +49,7 @@ public class QueryThreeMultiReducerDriver extends Configured implements Tool {
 		
 		// Configure partitioner
 		job.setPartitionerClass(TotalOrderPartitioner.class);
-		Path partitionFile = new Path(Properties.PARTITIONING_PATH_QUERY_THREE);
+		Path partitionFile = new Path(Properties.PARTITIONING_PATH_QUERY_ONE);
 		TotalOrderPartitioner.setPartitionFile(job.getConfiguration(), partitionFile);
 		
 		// Taking key samples from the input file

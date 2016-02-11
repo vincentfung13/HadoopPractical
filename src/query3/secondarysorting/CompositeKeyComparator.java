@@ -1,4 +1,4 @@
-package query3.singlereducer;
+package query3.secondarysorting;
 
 import java.util.Date;
 

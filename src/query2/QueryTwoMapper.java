@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
@@ -21,11 +21,11 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
  * @author vincentfung13
  */
 
-public class QueryTwoMapper extends Mapper<LongWritable, Text, LongWritable, LongWritable> {
+public class QueryTwoMapper extends Mapper<IntWritable, Text, IntWritable, IntWritable> {
 	
 	private Date earlierDate, laterDate;
-	private LongWritable articleIdWritable, modificationCounts;
-	private Map<Long, Long> articleModificationCounts;
+	private IntWritable modificationCounts;
+	private Map<IntWritable, Integer> articleModificationCounts;
 	
 	@Override
 	public void setup(Context context) {
@@ -33,11 +33,11 @@ public class QueryTwoMapper extends Mapper<LongWritable, Text, LongWritable, Lon
 		//parameters
 		earlierDate = ISO8601Utils.parse(conf.get("earlierTimestamp"));
 		laterDate = ISO8601Utils.parse(conf.get("laterTimestamp"));
-		articleModificationCounts = new HashMap<Long, Long>();
+		articleModificationCounts = new HashMap<IntWritable, Integer>();
 	}
 	
 	@Override
-	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+	public void map(IntWritable key, Text value, Context context) throws IOException, InterruptedException {
 		String line = value.toString();
 		String[] lineSplit = line.split("\n");
 		String[] firstLine = lineSplit[0].split(" ");
@@ -46,26 +46,24 @@ public class QueryTwoMapper extends Mapper<LongWritable, Text, LongWritable, Lon
 		Date revisionDate = ISO8601Utils.parse(timestamp);
 		        
 		// Trade off between memory usage and efficiency
-		if (revisionDate.after(earlierDate) && revisionDate.before(laterDate)) {
-				long articleId = Long.parseLong(firstLine[1]);  
-				if (articleModificationCounts.containsKey(articleId)) {
-					long oldValue = articleModificationCounts.get(articleId);
-					articleModificationCounts.put(articleId, oldValue + 1);
+		if (revisionDate.after(earlierDate) && revisionDate.before(laterDate)) { 
+				if (articleModificationCounts.containsKey(key)) {
+					int oldValue = articleModificationCounts.get(key);
+					articleModificationCounts.put(key, oldValue + 1);
 				}
 				else {
-					articleModificationCounts.put(articleId, 1L);
+					articleModificationCounts.put(key, 1);
 				}
 		}
 	}
 	
 	@Override
 	public void cleanup(Context context) throws IOException, InterruptedException{
-		Iterator<Entry<Long, Long>> itr = articleModificationCounts.entrySet().iterator();
+		Iterator<Entry<IntWritable, Integer>> itr = articleModificationCounts.entrySet().iterator();
 		while (itr.hasNext()){
-			Entry<Long, Long> entry = itr.next();
-			articleIdWritable = new LongWritable(entry.getKey());
-			modificationCounts = new LongWritable(entry.getValue());
-			context.write(articleIdWritable, modificationCounts);
+			Entry<IntWritable, Integer> entry = itr.next();
+			modificationCounts = new IntWritable(entry.getValue());
+			context.write(entry.getKey(), modificationCounts);
 		}
 		
 		// Clean up the map

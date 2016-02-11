@@ -1,8 +1,8 @@
-package query3.singlereducer;
+package query3.secondarysorting;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -12,14 +12,14 @@ import org.apache.hadoop.mapreduce.Reducer;
  * @author vincentfung13
  *
  */
-public class QueryThreeSecondarySortingReducer extends Reducer<ArticleIDTimestampWritable, LongWritable, ArticleIDTimestampWritable, Text> {
+public class QueryThreeSecondarySortingReducer extends Reducer<ArticleIDTimestampWritable, IntWritable, ArticleIDTimestampWritable, Text> {
 	
 	@Override
-	public void reduce(ArticleIDTimestampWritable key, Iterable<LongWritable> values, Context context) 
+	public void reduce(ArticleIDTimestampWritable key, Iterable<IntWritable> values, Context context) 
 			throws IOException, InterruptedException {
 		// Output only the first record (the one with the latest timestamp)
 		int i = 0;
-		for (LongWritable value: values) {
+		for (IntWritable value: values) {
 			if (i == 1)
 				break;
 			StringBuilder sb = new StringBuilder();

@@ -1,4 +1,4 @@
-package query3.singlereducer;
+package query3.secondarysorting;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,7 +8,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -23,12 +23,12 @@ import utility.WikiModificationFileInputFormat;
  * 
  * @author vincentfung13
  */
-public class QueryThreeSingleReducerDriver extends Configured implements Tool {
+public class QueryThreeSecondarySortingDriver extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception {
 		Job job = Job.getInstance(getConf());
 		job.setJobName("QueryThreeSingleReducerDriver");
-		job.setJarByClass(QueryThreeSingleReducerDriver.class);
+		job.setJarByClass(QueryThreeSecondarySortingDriver.class);
 		
 		job.setMapperClass(QueryThreeSecondarySortingMapper.class);
 		job.setReducerClass(QueryThreeSecondarySortingReducer.class);
@@ -36,7 +36,7 @@ public class QueryThreeSingleReducerDriver extends Configured implements Tool {
 		
 		job.setInputFormatClass(WikiModificationFileInputFormat.class);
 		job.setMapOutputKeyClass(ArticleIDTimestampWritable.class);
-		job.setMapOutputValueClass(LongWritable.class);
+		job.setMapOutputValueClass(IntWritable.class);
 		job.setOutputKeyClass(ArticleIDTimestampWritable.class);
 		job.setOutputValueClass(Text.class);
 		
@@ -57,7 +57,7 @@ public class QueryThreeSingleReducerDriver extends Configured implements Tool {
 		Configuration conf = new Configuration();
 		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
 		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
-		ToolRunner.run(conf, new QueryThreeSingleReducerDriver(), args);
+		ToolRunner.run(conf, new QueryThreeSecondarySortingDriver(), args);
 		
 		System.out.println("INFO: Mapreduce job finsihed, printing out the results:");
 		try {

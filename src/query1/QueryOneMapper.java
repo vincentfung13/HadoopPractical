@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
@@ -15,10 +15,10 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
  * 
  * @author vincentfung13
  */
-public class QueryOneMapper extends Mapper<LongWritable, Text, LongWritable, LongWritable>
+public class QueryOneMapper extends Mapper<IntWritable, Text, IntWritable, IntWritable>
 {
 	private Date earlierDate, laterDate;
-	private LongWritable articleId, revisionId;
+	private IntWritable revisionId;
 	
 	@Override 
 	public void setup(Context context) 
@@ -29,7 +29,7 @@ public class QueryOneMapper extends Mapper<LongWritable, Text, LongWritable, Lon
 		laterDate = ISO8601Utils.parse(conf.get("laterTimestamp"));
 	}
 	
-	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException
+	public void map(IntWritable key, Text value, Context context) throws IOException, InterruptedException
 	{
 		String line = value.toString();
 		String[] lineSplit = line.split("\n");
@@ -38,9 +38,8 @@ public class QueryOneMapper extends Mapper<LongWritable, Text, LongWritable, Lon
 		Date revisionDate = ISO8601Utils.parse(timestamp);
 		                                 
 		if(revisionDate.after(earlierDate) && revisionDate.before(laterDate)) {
-				articleId = new LongWritable(Long.parseLong(firstLine[1]));
-				revisionId = new LongWritable(Long.parseLong(firstLine[2]));     
-				context.write(articleId, revisionId);
+				revisionId = new IntWritable(Integer.parseInt((firstLine[2])));     
+				context.write(key, revisionId);
 		}
 	}
 }

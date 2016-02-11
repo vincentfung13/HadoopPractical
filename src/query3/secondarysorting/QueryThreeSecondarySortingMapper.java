@@ -1,10 +1,10 @@
-package query3.singlereducer;
+package query3.secondarysorting;
 
 import java.io.IOException;
 import java.util.Date;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
@@ -15,7 +15,7 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
  * 
  * @author vincentfung13
  */
-public class QueryThreeSecondarySortingMapper extends Mapper<LongWritable, Text, ArticleIDTimestampWritable, LongWritable> {
+public class QueryThreeSecondarySortingMapper extends Mapper<IntWritable, Text, ArticleIDTimestampWritable, IntWritable> {
 	
 	Date timeThreshold;
 	
@@ -26,7 +26,7 @@ public class QueryThreeSecondarySortingMapper extends Mapper<LongWritable, Text,
 	}
 	
 	@Override
-	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+	public void map(IntWritable key, Text value, Context context) throws IOException, InterruptedException {
 		String line = value.toString();
 		String[] lineSplit = line.split("\n");
 		String[] firstLine = lineSplit[0].split(" ");
@@ -37,7 +37,7 @@ public class QueryThreeSecondarySortingMapper extends Mapper<LongWritable, Text,
 		Date revisionDate = ISO8601Utils.parse(timestamp);
 		
 		if (revisionDate.before(timeThreshold)) {
-			context.write(new ArticleIDTimestampWritable(Long.parseLong(articleId), timestamp), new LongWritable(Long.parseLong(revisionId)));
+			context.write(new ArticleIDTimestampWritable(Integer.parseInt(articleId), timestamp), new IntWritable(Integer.parseInt(revisionId)));
 		}
 	}
 }

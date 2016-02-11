@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 import java.util.TreeMap;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
@@ -17,34 +17,34 @@ import org.apache.hadoop.mapreduce.Reducer;
  * @author vincentfung13
  */
 
-public class QueryTwoReducer extends Reducer<LongWritable, LongWritable, LongWritable, LongWritable> {
+public class QueryTwoReducer extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable> {
 	
-	private TreeMap<Long, PriorityQueue<Long>> modificationCountToArticle;
+	private TreeMap<Integer, PriorityQueue<Integer>> modificationCountToArticle;
 	private int k;
 	
 	@Override
 	public void setup(Context context) {
 		Configuration conf = context.getConfiguration();
 		k = conf.getInt("k", 10);
-		modificationCountToArticle = new TreeMap<Long, PriorityQueue<Long>>();
+		modificationCountToArticle = new TreeMap<Integer, PriorityQueue<Integer>>();
 	}
 	
 	@Override
-	public void reduce(LongWritable key, Iterable<LongWritable> values, Context context) 
+	public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) 
 			throws IOException, InterruptedException {
 		
-		long count = 0L;
-		for (LongWritable value: values){
+		int count = 0;
+		for (IntWritable value: values){
 			count += value.get();
 		}
 		
-		PriorityQueue<Long> articleIdQueue;
+		PriorityQueue<Integer> articleIdQueue;
 		if (modificationCountToArticle.size() < k) {
 			if (modificationCountToArticle.containsKey(count)) {
 				articleIdQueue = modificationCountToArticle.get(count);			
 			}
 			else {
-				articleIdQueue = new PriorityQueue<Long>();
+				articleIdQueue = new PriorityQueue<Integer>();
 			}
 			articleIdQueue.add(key.get());
 			modificationCountToArticle.put(count, articleIdQueue);
@@ -55,7 +55,7 @@ public class QueryTwoReducer extends Reducer<LongWritable, LongWritable, LongWri
 					articleIdQueue = modificationCountToArticle.get(count);			
 				}
 				else {
-					articleIdQueue = new PriorityQueue<Long>();
+					articleIdQueue = new PriorityQueue<Integer>();
 				}
 				articleIdQueue.add(key.get());
 				modificationCountToArticle.remove(modificationCountToArticle.firstKey());
@@ -66,12 +66,12 @@ public class QueryTwoReducer extends Reducer<LongWritable, LongWritable, LongWri
 	
 	@Override
 	public void cleanup(Context context) throws IOException, InterruptedException{
-		Iterator<Long> itr = modificationCountToArticle.descendingKeySet().iterator();
+		Iterator<Integer> itr = modificationCountToArticle.descendingKeySet().iterator();
 		while (itr.hasNext()) {
-			long key = itr.next();
-			PriorityQueue<Long> articleIdQueue = modificationCountToArticle.get(key);
+			int key = itr.next();
+			PriorityQueue<Integer> articleIdQueue = modificationCountToArticle.get(key);
 			while (articleIdQueue.size() > 0) {
-				context.write(new LongWritable(articleIdQueue.poll()), new LongWritable(key));
+				context.write(new IntWritable(articleIdQueue.poll()), new IntWritable(key));
 			}
 		}
 	}

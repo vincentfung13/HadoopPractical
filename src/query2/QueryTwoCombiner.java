@@ -2,7 +2,7 @@ package query2;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
@@ -11,16 +11,16 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * @author vincentfung13
  */
-public class QueryTwoCombiner extends Reducer<LongWritable, LongWritable, LongWritable, LongWritable> {
+public class QueryTwoCombiner extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable> {
 	
 	@Override
-	public void reduce(LongWritable key, Iterable<LongWritable> values, Context context) 
+	public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) 
 			throws IOException, InterruptedException {
 		
-		long totalCounts = 0L;	
-		for (LongWritable value: values)
+		int totalCounts = 0;	
+		for (IntWritable value: values)
 			totalCounts += value.get();
 		
-		context.write(key, new LongWritable(totalCounts));
+		context.write(key, new IntWritable(totalCounts));
 	}
 }

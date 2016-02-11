@@ -3,7 +3,7 @@ package query3.multireducer;
 import java.io.IOException;
 import java.util.Date;
 
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -15,9 +15,9 @@ import com.fasterxml.jackson.databind.util.ISO8601Utils;
  * @author vincentfung13
  */
 
-public class QueryThreeMultiReducer extends Reducer<LongWritable, Text, LongWritable, Text> {
+public class QueryThreeMultiReducer extends Reducer<IntWritable, Text, IntWritable, Text> {
 	@Override
-	public void reduce (LongWritable key, Iterable<Text> values, Context context) 
+	public void reduce (IntWritable key, Iterable<Text> values, Context context) 
 			throws IOException, InterruptedException {
 		Date currentLatestRevisionDate = null;
 		String currentLatestRevisionID = "";

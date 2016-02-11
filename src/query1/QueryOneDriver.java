@@ -8,10 +8,11 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.partition.InputSampler;
 import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -25,7 +26,6 @@ import utility.WikiModificationFileInputFormat;
  * 
  * @author vincentfung13
  */
-
 public class QueryOneDriver extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception {
@@ -36,9 +36,9 @@ public class QueryOneDriver extends Configured implements Tool {
 		job.setReducerClass(QueryOneReducer.class);
 		job.setNumReduceTasks(Properties.NUM_REDUCER_TASK);
 		
-		job.setMapOutputKeyClass(LongWritable.class);
-		job.setMapOutputValueClass(LongWritable.class);
-		job.setOutputKeyClass(LongWritable.class);
+		job.setMapOutputKeyClass(IntWritable.class);
+		job.setMapOutputValueClass(IntWritable.class);
+		job.setOutputKeyClass(IntWritable.class);
 		job.setOutputValueClass(Text.class);
 		
 		job.setInputFormatClass(WikiModificationFileInputFormat.class);
@@ -50,14 +50,14 @@ public class QueryOneDriver extends Configured implements Tool {
 		TotalOrderPartitioner.setPartitionFile(job.getConfiguration(), partitionFile);
 		
 		// Taking key samples from the input file
-//		double pcnt = 10.0;
-//		int numSamples = Properties.NUM_REDUCER_TASK;
-//		int maxSplits = Properties.NUM_REDUCER_TASK - 1;
-//		if (0 >= maxSplits)
-//			maxSplits = Integer.MAX_VALUE;
-//		InputSampler.Sampler<LongWritable, LongWritable> sampler = 
-//				new InputSampler.RandomSampler<LongWritable, LongWritable>(pcnt, numSamples, maxSplits);
-//        InputSampler.writePartitionFile(job, sampler);
+		double pcnt = 10.0;
+		int numSamples = Properties.NUM_REDUCER_TASK;
+		int maxSplits = Properties.NUM_REDUCER_TASK - 1;
+		if (0 >= maxSplits)
+			maxSplits = Integer.MAX_VALUE;
+		InputSampler.Sampler<IntWritable, Text> sampler = 
+				new InputSampler.RandomSampler<IntWritable, Text>(pcnt, numSamples, maxSplits);
+        InputSampler.writePartitionFile(job, sampler);
 
 		job.getConfiguration().set("earlierTimestamp", args[2]);
 		job.getConfiguration().set("laterTimestamp", args[3]);

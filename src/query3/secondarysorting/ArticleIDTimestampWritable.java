@@ -1,4 +1,4 @@
-package query3.singlereducer;
+package query3.secondarysorting;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -18,19 +18,19 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 public class ArticleIDTimestampWritable implements Writable, WritableComparable<ArticleIDTimestampWritable> {
 	
 	// This is the natural key
-	private Long articleId;
+	private Integer articleId;
 	private String timeStamp;
 	
 	public ArticleIDTimestampWritable() {
 	}
 
-	public ArticleIDTimestampWritable(long articleId, String timeStamp) {
+	public ArticleIDTimestampWritable(int articleId, String timeStamp) {
 		this.articleId = articleId;
 		this.timeStamp = timeStamp;
 	}
 
 	public void readFields(DataInput dataInput) throws IOException {
-		articleId = WritableUtils.readVLong(dataInput);
+		articleId = WritableUtils.readVInt(dataInput);
 		timeStamp = WritableUtils.readString(dataInput);
 	}
 
@@ -39,11 +39,11 @@ public class ArticleIDTimestampWritable implements Writable, WritableComparable<
 		WritableUtils.writeString(dataOutput, timeStamp);
 	}
 
-	public Long getArticleId() {
+	public Integer getArticleId() {
 		return articleId;
 	}
 
-	public void setArticleId(Long articleId) {
+	public void setArticleId(int articleId) {
 		this.articleId = articleId;
 	}
 
