@@ -15,7 +15,7 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
  * 
  * @author vincentfung13
  */
-public class QueryThreeSecondarySortingMapper extends Mapper<IntWritable, Text, ArticleIDTimestampWritable, IntWritable> {
+public class QueryThreeSecondarySortingMapper extends Mapper<ArticleIDTimestampWritable, Text, ArticleIDTimestampWritable, IntWritable> {
 	
 	Date timeThreshold;
 	
@@ -26,7 +26,7 @@ public class QueryThreeSecondarySortingMapper extends Mapper<IntWritable, Text, 
 	}
 	
 	@Override
-	public void map(IntWritable key, Text value, Context context) throws IOException, InterruptedException {
+	public void map(ArticleIDTimestampWritable key, Text value, Context context) throws IOException, InterruptedException {
 		String line = value.toString();
 		String[] lineSplit = line.split("\n");
 		String[] firstLine = lineSplit[0].split(" ");

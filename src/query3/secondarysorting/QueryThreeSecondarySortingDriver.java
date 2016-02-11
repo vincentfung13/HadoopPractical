@@ -16,6 +16,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 import utility.Properties;
+import utility.WikiModificationCompositeKeyInputFormat;
 import utility.WikiModificationFileInputFormat;
 
 /**
@@ -27,14 +28,14 @@ public class QueryThreeSecondarySortingDriver extends Configured implements Tool
 	
 	public int run(String[] args) throws Exception {
 		Job job = Job.getInstance(getConf());
-		job.setJobName("QueryThreeSingleReducerDriver");
+		job.setJobName("QueryThreeSecondingSortingDriver");
 		job.setJarByClass(QueryThreeSecondarySortingDriver.class);
 		
 		job.setMapperClass(QueryThreeSecondarySortingMapper.class);
 		job.setReducerClass(QueryThreeSecondarySortingReducer.class);
 		job.setNumReduceTasks(1);
 		
-		job.setInputFormatClass(WikiModificationFileInputFormat.class);
+		job.setInputFormatClass(WikiModificationCompositeKeyInputFormat.class);
 		job.setMapOutputKeyClass(ArticleIDTimestampWritable.class);
 		job.setMapOutputValueClass(IntWritable.class);
 		job.setOutputKeyClass(ArticleIDTimestampWritable.class);
