@@ -12,6 +12,8 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.partition.InputSampler;
+import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -30,10 +32,10 @@ public class QueryThreeSecondarySortingDriver extends Configured implements Tool
 		Job job = Job.getInstance(getConf());
 		job.setJobName("QueryThreeSecondingSortingDriver");
 		job.setJarByClass(QueryThreeSecondarySortingDriver.class);
+		job.setNumReduceTasks(Properties.NUM_REDUCER_TASK);
 		
 		job.setMapperClass(QueryThreeSecondarySortingMapper.class);
 		job.setReducerClass(QueryThreeSecondarySortingReducer.class);
-		job.setNumReduceTasks(1);
 		
 		job.setInputFormatClass(WikiModificationCompositeKeyInputFormat.class);
 		job.setMapOutputKeyClass(ArticleIDTimestampWritable.class);
@@ -44,6 +46,24 @@ public class QueryThreeSecondarySortingDriver extends Configured implements Tool
 		job.setSortComparatorClass(CompositeKeyComparator.class);
 		job.setGroupingComparatorClass(ArticleIDGroupingComparator.class);
 		job.setPartitionerClass(ArticleIDPartitioner.class);
+		
+		job.setPartitionerClass(TotalOrderPartitioner.class);
+		Path partitionFile = new Path(Properties.PARTITIONING_PATH_COMPOSITE_KEY);
+		TotalOrderPartitioner.setPartitionFile(job.getConfiguration(), partitionFile);
+		
+		// Taking key samples from the input file if the partition file doesn't exist
+		FileSystem fs = FileSystem.get(getConf());
+		FileStatus[] status = fs.listStatus(partitionFile);
+		if (status.length > 0) {
+			double pcnt = 10.0;
+			int numSamples = Properties.NUM_REDUCER_TASK;
+			int maxSplits = Properties.NUM_REDUCER_TASK - 1;
+			if (0 >= maxSplits)
+					maxSplits = Integer.MAX_VALUE;
+			InputSampler.Sampler<IntWritable, Text> sampler = 
+					new InputSampler.RandomSampler<IntWritable, Text>(pcnt, numSamples, maxSplits);
+			InputSampler.writePartitionFile(job, sampler);
+		}
 		
 		// Set input path and output path
 		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));

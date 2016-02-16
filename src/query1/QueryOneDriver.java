@@ -12,6 +12,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.partition.InputSampler;
 import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -48,15 +49,19 @@ public class QueryOneDriver extends Configured implements Tool {
 		Path partitionFile = new Path(Properties.PARTITIONING_PATH_ARTICLE_ID);
 		TotalOrderPartitioner.setPartitionFile(job.getConfiguration(), partitionFile);
 		
-		// Taking key samples from the input file
-//		double pcnt = 10.0;
-//		int numSamples = Properties.NUM_REDUCER_TASK;
-//		int maxSplits = Properties.NUM_REDUCER_TASK - 1;
-//		if (0 >= maxSplits)
-//			maxSplits = Integer.MAX_VALUE;
-//		InputSampler.Sampler<IntWritable, Text> sampler = 
-//				new InputSampler.RandomSampler<IntWritable, Text>(pcnt, numSamples, maxSplits);
-//        InputSampler.writePartitionFile(job, sampler);
+		// Taking key samples from the input file if the partition file doesn't exist
+		FileSystem fs = FileSystem.get(getConf());
+		FileStatus[] status = fs.listStatus(partitionFile);
+		if (status.length > 0) {
+		double pcnt = 10.0;
+			int numSamples = Properties.NUM_REDUCER_TASK;
+			int maxSplits = Properties.NUM_REDUCER_TASK - 1;
+			if (0 >= maxSplits)
+				maxSplits = Integer.MAX_VALUE;
+			InputSampler.Sampler<IntWritable, Text> sampler = 
+					new InputSampler.RandomSampler<IntWritable, Text>(pcnt, numSamples, maxSplits);
+	        InputSampler.writePartitionFile(job, sampler);
+		}
 
 		job.getConfiguration().set("earlierTimestamp", args[2]);
 		job.getConfiguration().set("laterTimestamp", args[3]);
