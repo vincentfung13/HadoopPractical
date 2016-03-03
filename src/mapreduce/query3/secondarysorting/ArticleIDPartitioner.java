@@ -1,4 +1,4 @@
-package query3.secondarysorting;
+package mapreduce.query3.secondarysorting;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Partitioner;

@@ -1,4 +1,4 @@
-package query1;
+package mapreduce.query3.secondarysorting;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,56 +12,44 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 import utility.Properties;
+import utility.WikiModificationCompositeKeyInputFormat;
 import utility.WikiModificationFileInputFormat;
 
 /**
- * Driver class for query three.
- * Note that the total order partitioner is used to achieve global sorting of keys before the reducers receive their inputs. 
+ * Driver class of the single reducer solution of query 3
  * 
  * @author vincentfung13
  */
-public class QueryOneDriver extends Configured implements Tool {
+public class QueryThreeSecondarySortingDriver extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception {
 		Job job = Job.getInstance(getConf());
-		job.setJobName("QueryOneDriver");
-		job.setJarByClass(QueryOneDriver.class);
-		job.setMapperClass(QueryOneMapper.class);
-		job.setReducerClass(QueryOneReducer.class);
-		job.setNumReduceTasks(Properties.NUM_REDUCER_TASK);
+		job.setJobName("QueryThreeSecondingSortingDriver");
+		job.setJarByClass(QueryThreeSecondarySortingDriver.class);
 		
-		job.setMapOutputKeyClass(IntWritable.class);
+		job.setMapperClass(QueryThreeSecondarySortingMapper.class);
+		job.setReducerClass(QueryThreeSecondarySortingReducer.class);
+		job.setNumReduceTasks(1);
+		
+		job.setInputFormatClass(WikiModificationCompositeKeyInputFormat.class);
+		job.setMapOutputKeyClass(ArticleIDTimestampWritable.class);
 		job.setMapOutputValueClass(IntWritable.class);
-		job.setOutputKeyClass(IntWritable.class);
+		job.setOutputKeyClass(ArticleIDTimestampWritable.class);
 		job.setOutputValueClass(Text.class);
 		
-		job.setInputFormatClass(WikiModificationFileInputFormat.class);
+		job.setSortComparatorClass(CompositeKeyComparator.class);
+		job.setGroupingComparatorClass(ArticleIDGroupingComparator.class);
+		job.setPartitionerClass(ArticleIDPartitioner.class);
+		
+		// Set input path and output path
 		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
-		job.setPartitionerClass(TotalOrderPartitioner.class);
-		Path partitionFile = new Path(Properties.PARTITIONING_PATH_ARTICLE_ID);
-		TotalOrderPartitioner.setPartitionFile(job.getConfiguration(), partitionFile);
-		
-		// Taking key samples from the input file
-//		double pcnt = 10.0;
-//		int numSamples = Properties.NUM_REDUCER_TASK;
-//		int maxSplits = Properties.NUM_REDUCER_TASK - 1;
-//		if (0 >= maxSplits)
-//			maxSplits = Integer.MAX_VALUE;
-//		InputSampler.Sampler<IntWritable, Text> sampler = 
-//				new InputSampler.RandomSampler<IntWritable, Text>(pcnt, numSamples, maxSplits);
-//        InputSampler.writePartitionFile(job, sampler);
-
-		job.getConfiguration().set("earlierTimestamp", args[2]);
-		job.getConfiguration().set("laterTimestamp", args[3]);
-			
-
+		job.getConfiguration().set("timestamp", args[2]);
 		job.submit();
 		return (job.waitForCompletion(true)? 0 : 1);
 	}
@@ -70,7 +58,7 @@ public class QueryOneDriver extends Configured implements Tool {
 		Configuration conf = new Configuration();
 		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
 		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
-		ToolRunner.run(conf, new QueryOneDriver(), args);
+		ToolRunner.run(conf, new QueryThreeSecondarySortingDriver(), args);
 		
 		System.out.println("INFO: Mapreduce job finsihed, printing out the results:");
 		try {
@@ -89,6 +77,6 @@ public class QueryOneDriver extends Configured implements Tool {
 			}
 		} catch (Exception e) {
 			System.err.println("ERROR: File not found.");
-		}	
+		}
 	}
 }

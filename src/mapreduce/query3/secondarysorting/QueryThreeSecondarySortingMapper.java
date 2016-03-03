@@ -1,4 +1,4 @@
-package query3.secondarysorting;
+package mapreduce.query3.secondarysorting;
 
 import java.io.IOException;
 import java.util.Date;

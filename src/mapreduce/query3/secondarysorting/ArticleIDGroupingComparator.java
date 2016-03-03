@@ -1,4 +1,4 @@
-package query3.secondarysorting;
+package mapreduce.query3.secondarysorting;
 
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;

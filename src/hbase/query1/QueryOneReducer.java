@@ -1,11 +1,11 @@
-package query1;
+package hbase.query1;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -15,13 +15,13 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * @author vincentfung13
  */
-public class QueryOneReducer extends Reducer<IntWritable, IntWritable, IntWritable, Text> {
-	
-	public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) 
+public class QueryOneReducer extends Reducer<LongWritable, LongWritable, LongWritable, Text> {
+							   
+	public void reduce(LongWritable key, Iterable<LongWritable> values, Context context) 
 			throws IOException, InterruptedException {
 		
-		List<Integer> revisionIds = new ArrayList<Integer>();
-		for (IntWritable value: values){
+		List<Long> revisionIds = new ArrayList<Long>();
+		for (LongWritable value: values){
 			revisionIds.add(value.get());
 		}
 		Collections.sort(revisionIds);
@@ -35,7 +35,7 @@ public class QueryOneReducer extends Reducer<IntWritable, IntWritable, IntWritab
 				sb.append(revisionIds.get(i)).append(" ");
 			}
 		}
-		
+
 		context.write(key, new Text(revisionIds.size() + " " + sb.toString()));
 	}  
 }  

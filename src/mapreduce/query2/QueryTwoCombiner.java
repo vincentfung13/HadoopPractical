@@ -1,4 +1,4 @@
-package query2;
+package mapreduce.query2;
 
 import java.io.IOException;
 

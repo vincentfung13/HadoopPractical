@@ -1,4 +1,4 @@
-package query3.secondarysorting;
+package hbase.query1;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,57 +8,66 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
+import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
 
 import utility.Properties;
-import utility.WikiModificationCompositeKeyInputFormat;
-import utility.WikiModificationFileInputFormat;
 
 /**
- * Driver class of the single reducer solution of query 3
+ * Driver class for query one.
+ * Note that the total order partitioner is used to achieve global sorting of keys before the reducers receive their inputs. 
  * 
  * @author vincentfung13
  */
-public class QueryThreeSecondarySortingDriver extends Configured implements Tool {
+
+public class QueryOneDriver extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception {
 		Job job = Job.getInstance(getConf());
-		job.setJobName("QueryThreeSecondingSortingDriver");
-		job.setJarByClass(QueryThreeSecondarySortingDriver.class);
+		job.setJobName("HBaseQueryOneDriver");
+		job.setJarByClass(QueryOneDriver.class);
 		
-		job.setMapperClass(QueryThreeSecondarySortingMapper.class);
-		job.setReducerClass(QueryThreeSecondarySortingReducer.class);
-		job.setNumReduceTasks(1);
-		
-		job.setInputFormatClass(WikiModificationCompositeKeyInputFormat.class);
-		job.setMapOutputKeyClass(ArticleIDTimestampWritable.class);
-		job.setMapOutputValueClass(IntWritable.class);
-		job.setOutputKeyClass(ArticleIDTimestampWritable.class);
+		job.setReducerClass(QueryOneReducer.class);
+		job.setOutputKeyClass(LongWritable.class);
 		job.setOutputValueClass(Text.class);
-		
-		job.setSortComparatorClass(CompositeKeyComparator.class);
-		job.setGroupingComparatorClass(ArticleIDGroupingComparator.class);
-		job.setPartitionerClass(ArticleIDPartitioner.class);
-		
-		// Set input path and output path
-		WikiModificationFileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
-		job.getConfiguration().set("timestamp", args[2]);
+		// Initialize the scan object
+		long earlierTimestampLong = ISO8601Utils.parse(args[2]).getTime();
+		long laterTimestampLong = ISO8601Utils.parse(args[3]).getTime();
+		Scan scan = new Scan();
+		scan.addColumn(Bytes.toBytes("WD"), Bytes.toBytes("TITLE"));
+		scan.setTimeRange(earlierTimestampLong, laterTimestampLong);
+		scan.setCaching(100);
+		scan.setCacheBlocks(false);
+		
+		// Initialize table mapper job
+		TableMapReduceUtil.initTableMapperJob("BD4Project2", 
+				scan,QueryOneMapper.class, ImmutableBytesWritable.class,IntWritable.class, job); 
+
+		// Submit the job and wait for completion
 		job.submit();
 		return (job.waitForCompletion(true)? 0 : 1);
 	}
 
 	public static void main(String[] args) throws Exception {
-		Configuration conf = new Configuration();
+		
+		Configuration oConf = new Configuration();
+		Configuration conf = HBaseConfiguration.create(oConf); 
 		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
-		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
-		ToolRunner.run(conf, new QueryThreeSecondarySortingDriver(), args);
+		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);		
+		ToolRunner.run(conf, new QueryOneDriver(), args);
 		
 		System.out.println("INFO: Mapreduce job finsihed, printing out the results:");
 		try {
@@ -77,6 +86,6 @@ public class QueryThreeSecondarySortingDriver extends Configured implements Tool
 			}
 		} catch (Exception e) {
 			System.err.println("ERROR: File not found.");
-		}
+		}	
 	}
 }

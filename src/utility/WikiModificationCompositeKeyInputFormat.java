@@ -2,6 +2,8 @@ package utility;
 
 import java.io.IOException;
 
+import mapreduce.query3.secondarysorting.ArticleIDTimestampWritable;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -13,8 +15,6 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-
-import query3.secondarysorting.ArticleIDTimestampWritable;
 
 public class WikiModificationCompositeKeyInputFormat extends FileInputFormat<ArticleIDTimestampWritable, Text> {
 	@Override

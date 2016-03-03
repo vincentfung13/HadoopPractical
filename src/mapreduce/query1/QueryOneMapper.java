@@ -1,4 +1,4 @@
-package query1;
+package mapreduce.query1;
 
 import java.io.IOException;
 import java.util.Date;
