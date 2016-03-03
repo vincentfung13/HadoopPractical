@@ -1,4 +1,4 @@
-# UGBigDataAssignmentOne
+# HadoopPractical
 
 This is our private repo for the big data assignment. The following sections are about how to set up the project and work on your own branch.
 
