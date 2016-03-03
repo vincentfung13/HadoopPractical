@@ -21,7 +21,7 @@ import utility.Properties;
 import utility.WikiModificationFileInputFormat;
 
 /**
- * Driver class for query three.
+ * Driver class for query one.
  * Note that the total order partitioner is used to achieve global sorting of keys before the reducers receive their inputs. 
  * 
  * @author vincentfung13
