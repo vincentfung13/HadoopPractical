@@ -25,6 +25,11 @@ git checkout -b Your-New-Branch-Name
 git push origin Your-New-Branch-Name
 ```
 
+To update your local repository (syncing with what everyone else has done), simply do:
+```
+git pull origin <the-branch-name-you-are-updating-from>
+```
+
 To commit and push your changes, do the following:
 ```
 <!--First check the changes made since the last commit-->
