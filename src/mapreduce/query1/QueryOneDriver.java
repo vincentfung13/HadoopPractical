@@ -49,11 +49,10 @@ public class QueryOneDriver extends Configured implements Tool {
 		Path partitionFile = new Path(Properties.PARTITIONING_PATH_ARTICLE_ID);
 		TotalOrderPartitioner.setPartitionFile(job.getConfiguration(), partitionFile);
 		
-		// Taking key samples from the input file if there is no partition file
+		// Taking key samples from the input file if the partition file doesn't exist
 		FileSystem fs = FileSystem.get(getConf());
 		FileStatus[] status = fs.listStatus(partitionFile);
-		if (status.length == 0) {
-			System.out.println("INFO: the input sampler is taking key samples from the input file.");
+		if (status.length > 0) {
 			double pcnt = 10.0;
 			int numSamples = Properties.NUM_REDUCER_TASK;
 			int maxSplits = Properties.NUM_REDUCER_TASK - 1;
