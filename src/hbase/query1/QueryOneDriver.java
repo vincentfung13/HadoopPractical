@@ -10,10 +10,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -54,7 +52,7 @@ public class QueryOneDriver extends Configured implements Tool {
 		
 		// Initialize table mapper job
 		TableMapReduceUtil.initTableMapperJob("BD4Project2", 
-				scan,QueryOneMapper.class, ImmutableBytesWritable.class,IntWritable.class, job); 
+				scan, QueryOneMapper.class, LongWritable.class, LongWritable.class, job); 
 
 		// Submit the job and wait for completion
 		job.submit();
