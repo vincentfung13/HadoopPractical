@@ -72,7 +72,7 @@ public class QueryOneDriver extends Configured implements Tool {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF));
+		conf.addResource(new Path(Properties.PATH_TO_CORESITE_CONF_MAPREDUCE));
 		conf.set("mapreduce.job.jar", Properties.PATH_TO_JAR);
 		ToolRunner.run(conf, new QueryOneDriver(), args);
 		
