@@ -71,7 +71,7 @@ public class QueryOneDriver extends Configured implements Tool {
 		System.out.println("INFO: Mapreduce job finsihed, printing out the results:");
 		try {
 			FileSystem fs = FileSystem.get(conf);
-			Path jobOutputPath = new Path(args[1]);
+			Path jobOutputPath = new Path(args[0]);
 		
 			FileStatus[] status = fs.listStatus(jobOutputPath);
 			for (int i = 0; i < status.length; i++) {

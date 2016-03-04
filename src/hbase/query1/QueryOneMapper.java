@@ -17,11 +17,11 @@ import org.apache.hadoop.io.LongWritable;
 public class QueryOneMapper extends TableMapper<LongWritable, LongWritable> {
 	
 	public void map(ImmutableBytesWritable key, Result  value, Context context) throws IOException, InterruptedException {
-		String articleIDRevID = Bytes.toString(key.get());
-		int stringLength = articleIDRevID.length();
-		String revID = articleIDRevID.substring(stringLength - 9, stringLength - 1);
-		String articleID = articleIDRevID.substring(0, stringLength - 10);
+		long articleID = Bytes.toLong(key.get(), 0);
+		long revID = Bytes.toLong(key.get(), 8);
 		
-		context.write(new LongWritable(Long.parseLong(articleID)), new LongWritable(Long.parseLong(revID)));
+		System.out.println(articleID + " " + revID);
+		
+		context.write(new LongWritable(articleID), new LongWritable(revID));
 	}
 }
