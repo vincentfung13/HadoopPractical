@@ -1,3 +1,4 @@
+
 package hbase.query1;
 
 import java.io.BufferedReader;
@@ -10,6 +11,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.KeyOnlyFilter;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.LongWritable;
@@ -39,19 +41,20 @@ public class QueryOneDriver extends Configured implements Tool {
 		job.setReducerClass(QueryOneReducer.class);
 		job.setOutputKeyClass(LongWritable.class);
 		job.setOutputValueClass(Text.class);
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job, new Path(args[0]));
 		
 		// Initialize the scan object
-		long earlierTimestampLong = ISO8601Utils.parse(args[2]).getTime();
-		long laterTimestampLong = ISO8601Utils.parse(args[3]).getTime();
+		long earlierTimestampLong = ISO8601Utils.parse(args[1]).getTime();
+		long laterTimestampLong = ISO8601Utils.parse(args[2]).getTime();
 		Scan scan = new Scan();
-		scan.addColumn(Bytes.toBytes("WD"), Bytes.toBytes("TITLE"));
+		scan.addFamily(Bytes.toBytes("WD"));
+		scan.setFilter(new KeyOnlyFilter(true));
 		scan.setTimeRange(earlierTimestampLong, laterTimestampLong);
 		scan.setCaching(100);
 		scan.setCacheBlocks(false);
 		
 		// Initialize table mapper job
-		TableMapReduceUtil.initTableMapperJob("BD4Project2", 
+		TableMapReduceUtil.initTableMapperJob("BD4Project2Sample", 
 				scan, QueryOneMapper.class, LongWritable.class, LongWritable.class, job); 
 
 		// Submit the job and wait for completion
