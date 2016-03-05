@@ -1,7 +1,11 @@
 package hbase.query2;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.PriorityQueue;
+import java.util.TreeMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -36,7 +40,6 @@ public class HBaseQueryTwoDriver extends Configured implements Tool {
 		
 		job.setCombinerClass(HBaseQueryTwoCombiner.class);
 		job.setReducerClass(HBaseQueryTwoReducer.class);
-		job.setNumReduceTasks(1);
 		
 		job.setOutputKeyClass(LongWritable.class);
 		job.setOutputValueClass(IntWritable.class);
@@ -71,18 +74,61 @@ public class HBaseQueryTwoDriver extends Configured implements Tool {
 		try {
 			FileSystem fs = FileSystem.get(conf);
 			Path jobOutputPath = new Path(args[0]);
+			int k = Integer.parseInt(args[3]);
 		
+			TreeMap<Integer, PriorityQueue<Long>> modificationCountToArticle = new TreeMap<Integer, PriorityQueue<Long>>();
+			PriorityQueue<Long> articleIdQueue;
+			long articleId;
+			int modificationCount;
+			String[] lineSplit;
 			FileStatus[] status = fs.listStatus(jobOutputPath);
 			for (int i = 0; i < status.length; i++) {
 				BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(status[i].getPath())));
 				String line;
                 line = br.readLine();
-                while (line != null){
-                	System.out.println(line);
-                    line = br.readLine();
+                while (line != null) {
+                	lineSplit = line.split("\\s+");
+                	articleId = Long.parseLong(lineSplit[0]);
+                	modificationCount = Integer.parseInt(lineSplit[1]);
+                    
+                	if (modificationCountToArticle.size() < k) {
+            			if (modificationCountToArticle.containsKey(modificationCount)) {
+            				articleIdQueue = modificationCountToArticle.get(modificationCount);			
+            			}
+            			else {
+            				articleIdQueue = new PriorityQueue<Long>();
+            			}
+            			articleIdQueue.add(articleId);
+            			modificationCountToArticle.put(modificationCount, articleIdQueue);
+            		}
+            		else if (modificationCountToArticle.size() == k) {
+            			if (modificationCountToArticle.firstKey() < modificationCount) {
+            				if (modificationCountToArticle.containsKey(modificationCount)) {
+            					articleIdQueue = modificationCountToArticle.get(modificationCount);			
+            				}
+            				else {
+            					articleIdQueue = new PriorityQueue<Long>();
+            				}
+            				articleIdQueue.add(articleId);
+            				modificationCountToArticle.remove(modificationCountToArticle.firstKey());
+            				modificationCountToArticle.put(modificationCount, articleIdQueue);
+            			}
+            		}
+                	
+                	line = br.readLine();
                 }
 			}
-		} catch (Exception e) {
+			
+			Iterator<Integer> itr = modificationCountToArticle.descendingKeySet().iterator();
+    		while (itr.hasNext()) {
+    			int key = itr.next();
+    			PriorityQueue<Long> articleIdQueueItr = modificationCountToArticle.get(key);
+    			while (articleIdQueueItr.size() > 0) {
+    				System.out.println(articleIdQueueItr.poll() + " " + key);
+    			}
+    		}
+			
+		} catch (FileNotFoundException e) {
 			System.err.println("ERROR: File not found.");
 		}	
 	}
