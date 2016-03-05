@@ -12,7 +12,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * @author vincentfung13
  */
-public class QueryTwoCombiner extends Reducer<LongWritable, IntWritable, LongWritable, IntWritable> {
+public class HBaseQueryTwoCombiner extends Reducer<LongWritable, IntWritable, LongWritable, IntWritable> {
 	
 	@Override
 	public void reduce(LongWritable key, Iterable<IntWritable> values, Context context) 

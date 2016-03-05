@@ -21,7 +21,7 @@ import org.apache.hadoop.io.LongWritable;
  * @author vincentfung13
  */
 
-public class QueryTwoMapper extends TableMapper<LongWritable, IntWritable> {
+public class HBaseQueryTwoMapper extends TableMapper<LongWritable, IntWritable> {
 	private IntWritable modificationCounts;
 	private Map<Long, Integer> articleModificationCounts;
 	

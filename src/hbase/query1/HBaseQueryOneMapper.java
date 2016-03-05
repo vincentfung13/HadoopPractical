@@ -10,11 +10,10 @@ import org.apache.hadoop.io.LongWritable;
 
 /**
  * Mapper class for query one
- * With input as <positionInFile, revisionContent> and output as <articleId, revisionId>
  * 
  * @author vincentfung13
  */
-public class QueryOneMapper extends TableMapper<LongWritable, LongWritable> {
+public class HBaseQueryOneMapper extends TableMapper<LongWritable, LongWritable> {
 	
 	public void map(ImmutableBytesWritable key, Result value, Context context) throws IOException, InterruptedException {
 		long articleID = Bytes.toLong(key.get(), 0);

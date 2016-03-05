@@ -18,7 +18,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * @author vincentfung13
  */
 
-public class QueryTwoReducer extends Reducer<LongWritable, IntWritable, LongWritable, IntWritable> {
+public class HBaseQueryTwoReducer extends Reducer<LongWritable, IntWritable, LongWritable, IntWritable> {
 	
 	private TreeMap<Integer, PriorityQueue<Long>> modificationCountToArticle;
 	private int k;

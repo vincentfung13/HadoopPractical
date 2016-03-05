@@ -16,7 +16,7 @@ import org.apache.htrace.fasterxml.jackson.databind.util.ISO8601Utils;
  * 
  * @author vincentfung13
  */
-public class QueryThreeSecondarySortingMapper extends TableMapper<ArticleIDTimestampWritable, LongWritable> {
+public class HBaseQueryThreeMapper extends TableMapper<ArticleIDTimestampWritable, LongWritable> {
 	
 	@Override
 	public void map(ImmutableBytesWritable key, Result value, Context context) throws IOException, InterruptedException {

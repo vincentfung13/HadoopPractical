@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * @author vincentfung13
  */
-public class QueryOneReducer extends Reducer<LongWritable, LongWritable, LongWritable, Text> {
+public class HBaseQueryOneReducer extends Reducer<LongWritable, LongWritable, LongWritable, Text> {
 							   
 	public void reduce(LongWritable key, Iterable<LongWritable> values, Context context) 
 			throws IOException, InterruptedException {

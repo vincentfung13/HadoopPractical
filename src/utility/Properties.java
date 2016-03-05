@@ -9,5 +9,8 @@ public class Properties {
 	public final static String PARTITIONING_PATH_COMPOSITE_KEY = "/user/2104275f/partitioning_query_two_perftest";
 	public final static String PARTITIONING_PATH_QUERY_THREE = "/user/2104275f/partitioning_query_three_perftest";
 	
+	public final static String HBASE_TABLE_NAME = "BD4Project2Sample";
+	public final static String HBASE_COLUNMN_FAMILY = "WD";
+	
 	public final static int NUM_REDUCER_TASK = 64;
 }
