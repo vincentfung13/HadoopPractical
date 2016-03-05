@@ -40,7 +40,7 @@ public class HBaseCompositeKeyPartitioner extends Partitioner<ArticleIDTimestamp
 		}
 		
 		long intervalLength = (lastArticleId - firstArticleId) / numOfPartitions;
-		return (int) (key.getArticleId() / intervalLength);
+		return (int) ((key.getArticleId() - firstArticleId) / intervalLength);
 	}
 	
 	private static void fillFirstAndLastID() throws IOException {

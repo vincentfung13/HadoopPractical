@@ -45,7 +45,7 @@ public class HBaseRowKeyPartitioner extends Partitioner<LongWritable, LongWritab
 		}
 		
 		long intervalLength = (lastArticleId - firstArticleId) / numberOfPartition;
-		return (int) (key.get() / intervalLength);
+		return (int) ((key.get() - firstArticleId) / intervalLength);
 	}
 	
 	private static void fillFirstAndLastID() throws IOException {
